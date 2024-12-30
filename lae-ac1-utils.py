@@ -43,8 +43,8 @@ def readWrite(n, row, doWrite, value, timeout):
       #if n == None or (n % 10 == 0) :
       success = ''
       if value :
-        success = 'OK' if rvalue == value else 'FAIL'
-      logging.info(f'{logText} {value:6}  {units}  {success}')
+        success = '✅' if rvalue == value else '❌'
+      logging.info(f'{logText} {rvalue:6}  {units}  {success}')
 
 
   except Exception as ex :
@@ -62,17 +62,17 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(description='LAE AC1 register utilities')
   parser.add_argument("register", nargs='*', type=str, help='read multiple registers e.g. 1SP 2SP or addresses e.g. 203 213. When using --set to write, specify single register only ')
   parser.add_argument("-a", "--all", dest="all", action='store_true' , default=False, help="read ALL registers")
-  parser.add_argument("--set", dest="setValue", type=float, help ='set register to SETVALUE')
+  parser.add_argument("--set", dest="setValue", type=float, help ='set register to SETVALUE. Writes are verified with a subsequent read.')
   parser.add_argument("--device", dest="device", default='/dev/ttyUSB0', help="serial interface, default is %(default)s")
 
   parser.add_argument("--map", dest="modbusMap", default='lae-ac1-27.csv', help="CSV filename containinig map of register mnemonics and addresses, default is %(default)s")
   parser.add_argument("-f",          dest="force", action='store_true', default=False, help="force access to addresses not in the CSV file")
 
-  parser.add_argument("-n", "--repeat", dest="loop", help="repeat LOOP times (only 1 write permitted). Sleeps 100ms between repeats", type=int, default=None)
+  parser.add_argument("-n", "--repeat", dest="loop", help="repeat n times (only 1 write permitted). Sleeps 100ms between repeats", type=int, default=None)
   parser.add_argument("-t", dest="timeout", help="serial port transaction timeout and sleep following an exception, default is %(default).1f secs", type=float, default=0.5)
   parser.add_argument("-u", "--unit", default=1, help="AC1 modbus address, default is %(default)i", type=int)
   parser.add_argument("--lock", action='store_true', default=False, help="lock port to give exclusive access, default is False")
-  parser.add_argument('--log', default='WARNING', help="Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL), default is %(default)s. Level DEBUG shows MinimalModbus messages including ASCII PDUs")
+  parser.add_argument('--log', default='INFO', help="Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL), default is %(default)s. Level DEBUG shows MinimalModbus messages including ASCII PDUs")
 
   args = parser.parse_args()
 
@@ -142,8 +142,6 @@ if __name__ == "__main__":
           time.sleep(0.1)  # very arbitrary
 
         for address in args.register:
-          logging.debug(row)
-
           rowFound = None
           for row in rows:
             if address == row['Address']   \
