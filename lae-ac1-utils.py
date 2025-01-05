@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
   usage = ["%prog <register1> <register2> ..."]
   parser = argparse.ArgumentParser(description='LAE AC1 register utilities')
-  parser.add_argument("register", nargs='*', type=str, help='read multiple registers e.g. 1SP 2SP or addresses e.g. 203 213. When using --set to write, specify single register only ')
+  parser.add_argument("register", nargs='+', type=str, help='read multiple registers e.g. 1SP 2SP or addresses e.g. 203 213. When using --set to write, specify single register only ')
   parser.add_argument("-a", "--all", dest="all", action='store_true' , default=False, help="read ALL registers")
   parser.add_argument("--set", dest="setValue", type=float, help ='set register to SETVALUE. Writes are verified with a subsequent read.')
   parser.add_argument("--device", dest="device", default='/dev/ttyUSB0', help="serial interface, default is %(default)s")
