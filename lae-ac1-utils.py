@@ -98,6 +98,7 @@ if __name__ == "__main__":
 #  rows = [(row) =>  for row in rows]
   for row in rows:
     m = re.search("\.[\d]+$",f"{row['Default value']}")
+    # logging.debug(f"{row['Mnem.']} default {row['Default value']} m {m}")
     row['Scale'] = 1 if m else 0
 
 
@@ -162,7 +163,7 @@ if __name__ == "__main__":
               rowFound['Address'] = address
 
           if rowFound:
-            if args.setValue :
+            if args.setValue is not None :
               if len(args.register) != 1:
                 logging.warning('Can only write to one register at a time')
                 break
