@@ -32,15 +32,11 @@ def readWrite(n, row, doWrite, value, timeout):
 
   try :
     if doWrite:  # write operation
-      sval = value*10  if scale == 1 else value
-      abc = instr.write_register(address, sval, number_of_decimals=0, functioncode=6, signed=True)
-      #if n == None or (n % 10 == 0) :
+      abc = instr.write_register(address, value, number_of_decimals=scale, functioncode=6, signed=True)
       logging.info(f'{logText} =>{value:4}  {units}')
 
     else:             # read operation
-      sval = instr.read_register(address, number_of_decimals=0, functioncode=3, signed=True)
-      rvalue = sval/10  if scale == 1 else sval
-      #if n == None or (n % 10 == 0) :
+      rvalue = instr.read_register(address, number_of_decimals=scale, functioncode=3, signed=True)
       success = ''
       if value :
         success = '✅' if rvalue == value else '❌'
